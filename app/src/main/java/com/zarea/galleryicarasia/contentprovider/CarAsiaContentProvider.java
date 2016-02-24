@@ -16,14 +16,11 @@ import com.zarea.galleryicarasia.database.DatabaseHelper;
 /**
  * Created by zarea on 2/22/16.
  */
-public class CarAsiaContentProvider extends ContentProvider{
-
-    private DatabaseHelper mDatabaseHelper;
-
-    private static UriMatcher mUriMatcher;
+public class CarAsiaContentProvider extends ContentProvider {
 
     private static final int GET_FROM_GALLERY = 1;
     private static final int SEARCH_ADD_BUTTON_IMAGE = 2;
+    private static UriMatcher mUriMatcher;
 
     static {
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -34,6 +31,9 @@ public class CarAsiaContentProvider extends ContentProvider{
                 DatabaseContract.Gallery.TABLE_PATH + "/*",
                 SEARCH_ADD_BUTTON_IMAGE);
     }
+
+    private DatabaseHelper mDatabaseHelper;
+
     @Override
     public boolean onCreate() {
         mDatabaseHelper = new DatabaseHelper(getContext());
@@ -46,22 +46,22 @@ public class CarAsiaContentProvider extends ContentProvider{
 
         int match = mUriMatcher.match(uri);
         SQLiteDatabase sqLiteDatabase = mDatabaseHelper.getWritableDatabase();
-        switch (match){
+        switch (match) {
             case GET_FROM_GALLERY:
                 cursor = sqLiteDatabase.query(DatabaseContract.Gallery.TABLE_NAME,
-                        projection,selection,selectionArgs,null,null,sortOrder);
+                        projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case SEARCH_ADD_BUTTON_IMAGE:
                 cursor = sqLiteDatabase.query(
                         DatabaseContract.Gallery.TABLE_NAME,
                         projection,
-                        DatabaseContract.Gallery.COLUMN_VIEW_TYPE+ " = ?",
+                        DatabaseContract.Gallery.COLUMN_VIEW_TYPE + " = ?",
                         new String[]{DatabaseContract.Gallery.getSearchViewTypeFromUri(uri)}, null, null, sortOrder);
                 break;
             default:
-                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined)+uri);
+                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined) + uri);
         }
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -76,12 +76,12 @@ public class CarAsiaContentProvider extends ContentProvider{
         switch (match) {
             case GET_FROM_GALLERY:
                 SQLiteDatabase sqLiteDatabase = mDatabaseHelper.getWritableDatabase();
-                long id = sqLiteDatabase.insert(DatabaseContract.Gallery.TABLE_NAME,null,values);
-                uri = ContentUris.withAppendedId(uri,id);
-                getContext().getContentResolver().notifyChange(uri,null);
+                long id = sqLiteDatabase.insert(DatabaseContract.Gallery.TABLE_NAME, null, values);
+                uri = ContentUris.withAppendedId(uri, id);
+                getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:
-                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined)+uri);
+                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined) + uri);
         }
         return uri;
     }
@@ -98,7 +98,7 @@ public class CarAsiaContentProvider extends ContentProvider{
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:
-                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined)+uri);
+                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined) + uri);
         }
 
         return deletedRowId;
@@ -112,11 +112,11 @@ public class CarAsiaContentProvider extends ContentProvider{
             case GET_FROM_GALLERY:
                 SQLiteDatabase sqLiteDatabase = mDatabaseHelper.getWritableDatabase();
                 updatedRows = sqLiteDatabase.update(DatabaseContract.Gallery.TABLE_NAME,
-                        values,selection,selectionArgs);
+                        values, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:
-                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined)+uri);
+                throw new UnsupportedOperationException(getContext().getString(R.string.uri_not_defined) + uri);
         }
         return updatedRows;
     }

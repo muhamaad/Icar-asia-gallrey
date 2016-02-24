@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.zarea.galleryicarasia.database.DatabaseContract;
+
 import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN_IMAGE_NAME;
 import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN_PRIORITY;
 import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN_VIEW_TYPE;

@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/footer_grid_view_background"
     android:orientation="horizontal"
-    android:padding="5dp"
     android:visibility="gone">
 
     <Button
@@ -16,10 +15,13 @@
         android:background="@android:color/transparent"
         android:text="DELETE"
         android:textColor="#0C70FF" />
+
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background=""/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#A2A1A3" />
 
     <Button
         android:id="@+id/Footer_make_as_main_button"
@@ -29,6 +31,13 @@
         android:background="@android:color/transparent"
         android:text="MAKE AS MAIN"
         android:textColor="#0C70FF" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#A2A1A3" />
 
     <Button
         android:id="@+id/Footer_edit_button"

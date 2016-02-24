@@ -15,10 +15,11 @@ import com.zarea.galleryicarasia.utils.PhotoUtils;
 
 import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN_PRIORITY;
 import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN_VIEW_TYPE;
+
 /**
  * Created by zarea on 2/22/16.
  */
-public class GalleryAdapter extends SimpleCursorAdapter{
+public class GalleryAdapter extends SimpleCursorAdapter {
 
     private LayoutInflater inflater;
     private int layout;
@@ -26,7 +27,7 @@ public class GalleryAdapter extends SimpleCursorAdapter{
     private int maxImagesLimit = 10;
 
     public GalleryAdapter(Context context, int layout, String[] from, int[] to, int maximumImagesLimit) {
-        super(context, layout, null, from,to,0);
+        super(context, layout, null, from, to, 0);
         this.layout = layout;
         inflater = LayoutInflater.from(context);
         photoUtils = PhotoUtils.getInstance();
@@ -36,7 +37,7 @@ public class GalleryAdapter extends SimpleCursorAdapter{
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(layout,parent,false);
+        return inflater.inflate(layout, parent, false);
     }
 
     @Override
@@ -44,17 +45,17 @@ public class GalleryAdapter extends SimpleCursorAdapter{
         super.bindView(view, context, cursor);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_cell);
         cursor.getInt(cursor.getColumnIndex(COLUMN_PRIORITY));
-        if(cursor.getString(cursor.getColumnIndex(COLUMN_VIEW_TYPE))
-                .equals(DatabaseContract.Gallery.ViewTypes.ADD_BUTTON)){
+        if (cursor.getString(cursor.getColumnIndex(COLUMN_VIEW_TYPE))
+                .equals(DatabaseContract.Gallery.ViewTypes.ADD_BUTTON)) {
             imageView.setImageResource(R.drawable.add_new_image);
-        }else{
-            imageView.setImageBitmap(photoUtils.getImageBitmap(context,cursor.getString(cursor.getColumnIndex(DatabaseContract.Gallery.COLUMN_IMAGE_NAME))));
+        } else {
+            imageView.setImageBitmap(photoUtils.getImageBitmap(context, cursor.getString(cursor.getColumnIndex(DatabaseContract.Gallery.COLUMN_IMAGE_NAME))));
         }
     }
 
     @Override
     public boolean isEnabled(int position) {
-        if(getItemViewType(position) == 0 && getCount() == maxImagesLimit){
+        if (getItemViewType(position) == 0 && getCount() == maxImagesLimit) {
             overLoadImages();
             return false;
         }
@@ -65,9 +66,9 @@ public class GalleryAdapter extends SimpleCursorAdapter{
     public int getItemViewType(int position) {
         Cursor cursor = (Cursor) getItem(position);
         String viewType = cursor.getString(cursor.getColumnIndex(COLUMN_VIEW_TYPE));
-        if( viewType.equals(DatabaseContract.Gallery.ViewTypes.ADD_BUTTON)){
+        if (viewType.equals(DatabaseContract.Gallery.ViewTypes.ADD_BUTTON)) {
             return 0;
-        }else{
+        } else {
             return 1;
         }
     }

@@ -3,5 +3,4 @@
     android:id="@+id/image_view_cell"
     android:layout_width="72dp"
     android:layout_height="72dp"
-    android:padding="5dp">
-</ImageView>
+    android:padding="5dp"></ImageView>

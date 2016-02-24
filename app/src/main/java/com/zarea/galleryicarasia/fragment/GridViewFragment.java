@@ -29,7 +29,7 @@ import static com.zarea.galleryicarasia.database.DatabaseContract.Gallery.COLUMN
 /**
  * Created by zarea on 2/22/16.
  */
-public class GridViewFragment extends CarAsiaFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class GridViewFragment extends CarAsiaFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int MAXIMUM_IMAGES_LIMIT = 21;
     public static final int INIT_LOADER = 1;
@@ -37,6 +37,17 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
     private PhotoUtils photoUtils;
     private GalleryAdapter galleryAdapter;
     private FooterHelper footerHelper;
+    private AdapterView.OnItemClickListener gridItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (galleryAdapter.getItemViewType(position) == 0) {
+                photoUtils.createImageChooseDialog(GridViewFragment.this);
+            } else {
+                Cursor cursor = (Cursor) parent.getAdapter().getItem(position);
+                footerHelper.setCursor(cursor);
+            }
+        }
+    };
 
     public GridViewFragment() {
     }
@@ -45,7 +56,7 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         galleryAdapter = new GalleryAdapter(getActivity(), R.layout.grid_cell,
-                new String[]{COLUMN_IMAGE_NAME},new int[]{R.id.image_view_cell}, MAXIMUM_IMAGES_LIMIT);
+                new String[]{COLUMN_IMAGE_NAME}, new int[]{R.id.image_view_cell}, MAXIMUM_IMAGES_LIMIT);
         photoUtils = PhotoUtils.getInstance();
     }
 
@@ -58,11 +69,10 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
         gridView.setAdapter(galleryAdapter);
         gridView.setOnItemClickListener(gridItemClickListener);
 
-        getLoaderManager().initLoader(INIT_LOADER,null,this);
+        getLoaderManager().initLoader(INIT_LOADER, null, this);
         return mRootView;
 
     }
-
 
     @Override
     public void onDestroyView() {
@@ -71,28 +81,28 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
     }
 
     @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            Bitmap bitmap = photoUtils.onActivityResultHandler(requestCode, resultCode, data);
-            if(null != bitmap) {
-                String name = photoUtils.saveImage(getActivity(),bitmap);
-                if(null != name) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(COLUMN_IMAGE_NAME, name);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap bitmap = photoUtils.onActivityResultHandler(requestCode, resultCode, data);
+        if (null != bitmap) {
+            String name = photoUtils.saveImage(getActivity(), bitmap);
+            if (null != name) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_IMAGE_NAME, name);
 
-                    if(footerHelper.isReplace()){
-                        replaceImage(contentValues);
-                    }else {
-                        insertImage(contentValues);
-                    }
+                if (footerHelper.isReplace()) {
+                    replaceImage(contentValues);
+                } else {
+                    insertImage(contentValues);
                 }
             }
         }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(getActivity(),
                 Gallery.CONTENT_URI,
-                null,null,null, Gallery.COLUMN_PRIORITY+" DESC");
+                null, null, null, Gallery.COLUMN_PRIORITY + " DESC");
     }
 
     @Override
@@ -100,12 +110,12 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
         galleryAdapter.changeCursor(cursor);
     }
 
+    // Private methods
+
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         galleryAdapter.changeCursor(null);
     }
-
-    // Private methods
 
     private void insertImage(ContentValues contentValues) {
         contentValues.put(Gallery.COLUMN_VIEW_TYPE, Gallery.ViewTypes.IMAGE_GALLERY);
@@ -121,20 +131,8 @@ public class GridViewFragment extends CarAsiaFragment implements LoaderManager.L
     private void replaceImage(ContentValues contentValues) {
         photoUtils.deleteImageBitmap(getActivity(), footerHelper.getImageName());
         getActivity().getContentResolver().update(Gallery.CONTENT_URI,
-                contentValues, _ID+"=?",
-                new String[]{footerHelper.getImageId()+""});
+                contentValues, _ID + "=?",
+                new String[]{footerHelper.getImageId() + ""});
     }
-
-    private AdapterView.OnItemClickListener gridItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (galleryAdapter.getItemViewType(position) == 0) {
-                photoUtils.createImageChooseDialog(GridViewFragment.this);
-            } else {
-                Cursor cursor = (Cursor) parent.getAdapter().getItem(position);
-                footerHelper.setCursor(cursor);
-            }
-        }
-    };
 
 }

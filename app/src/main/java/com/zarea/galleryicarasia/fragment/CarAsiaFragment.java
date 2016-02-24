@@ -10,7 +10,7 @@ public abstract class CarAsiaFragment extends Fragment {
 
     protected View mRootView;
 
-    protected View findViewById(int id){
+    protected View findViewById(int id) {
         return mRootView.findViewById(id);
     }
 }
